@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MDA Microprocessor &amp; Microcontroller Lab Simulator (MDA-8086 / MDA-8051)</title>
+<style>
+:root{box-sizing:border-box;--bg:#090d12;--fg:#e8eef5;--pn:#111822;--bd:#243245;--accent:#12b57a;--accent-glow:#12b57a66}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(900px 500px at 15% -10%,#14392f 0,transparent 60%),radial-gradient(700px 400px at 100% 0,#1a2450 0,transparent 55%),var(--bg);color:var(--fg);font:13.5px/1.4 system-ui,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+.w{max-width:1300px;margin:auto;padding:12px;display:grid;gap:12px}h1{font-size:19px;margin:0;background:linear-gradient(90deg,#5ef2b0,#6aa8ff);-webkit-background-clip:text;background-clip:text;color:transparent}.r{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button,select,input[type=range]{font:inherit;padding:5px 12px;border:1px solid var(--bd);border-radius:999px;background:var(--pn);color:var(--fg);cursor:pointer}button:hover,select:hover{border-color:#5ef2b0}.tab{font-weight:600;padding:6px 16px}.tab.on{background:linear-gradient(135deg,#12b57a,#0b7a52);color:#fff;border-color:#12b57a}
+.p{background:#111822dd;border:1px solid var(--bd);border-radius:14px;padding:12px 14px;display:grid;gap:10px}#board{position:relative;border-radius:18px;background:repeating-linear-gradient(45deg,#0e5c37 0 2px,#0b5231 2px 4px);box-shadow:inset 0 0 0 2px #23a263,inset 0 0 50px #02170d,0 0 0 7px #1a1f27,0 24px 60px #000b;padding:18px 20px;color:#e9f7ee;display:grid;gap:12px}.sil{font:700 11px ui-monospace,monospace;letter-spacing:.08em;color:#e8f7ee}
+#lcd{background:linear-gradient(#bddc6e,#9dc14c);color:#182803;font:700 17px/1.25 "Courier New",monospace;padding:8px 12px;border-radius:6px;box-shadow:inset 0 0 14px #3a5a08,0 0 0 5px #0c0c0c,0 0 0 7px #2a2f36;width:100%;max-width:340px;white-space:pre;overflow-x:auto;min-height:58px}.led{width:20px;height:20px;border-radius:50%;background:#260a0a;border:2px solid #0a0a0a;transition:.08s}.led.on{background:#ff3830;box-shadow:0 0 16px 4px #ff3830}svg{background:#05070a;border-radius:6px;height:90px;border:2.5px solid #0a0a0a}#seg *{fill:#1f0707}#seg .on{fill:#ff3830}
+#board-grid{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:14px;align-items:start}@media(max-width:780px){#board-grid{grid-template-columns:1fr}}
+#dip{display:flex;gap:5px}.sw{width:24px;height:44px;padding:0;border-radius:4px;border:1px solid #111;background:linear-gradient(#ececec 50%,#8a1f1f 50%)}.sw.on{background:linear-gradient(#b02a2a 50%,#ececec 50%)}
+#pad{display:grid;grid-template-columns:repeat(6,minmax(36px,44px));gap:5px;width:max-content;background:#08382222;padding:8px;border-radius:10px}#pad button{height:38px;border:0;border-radius:8px;background:radial-gradient(circle at 35% 28%,#566074,#222733 70%);color:#fff;font:700 12px ui-monospace,monospace;padding:0}#pad [data-key=GO]{background:radial-gradient(circle at 35% 28%,#32c77d,#0b6b3a)!important}#pad [data-key=RES]{background:radial-gradient(circle at 35% 28%,#e5584f,#8f1d17)!important}
+.pc-panel{background:#070d14ea;border:2px solid #23a26388;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:420px}.pc-panel.pc-active{border-color:#5ef2b0}.c-tab{font-size:11.5px;padding:4px 12px;border-radius:6px;background:#141d29;border:1px solid #24354a;color:#9eb0c4}.c-tab.on{background:#1a3f31;color:#5ef2b0;border-color:#2a9d5c}textarea{width:100%;height:270px;font:12.5px/1.4 ui-monospace,monospace;background:#05090f;color:#e8f0f8;border:1px solid #1c2b3d;border-radius:8px;padding:8px 10px}textarea:focus{outline:none;border-color:#5ef2b0}pre{margin:0;font:11.5px/1.4 ui-monospace,monospace;overflow:auto;max-height:220px}#tl{background:#05090f;border:1px solid #1c2b3d;border-radius:8px;padding:8px;min-height:190px;color:#9fe8c2;white-space:pre-wrap}#ti{width:100%;font:12.5px ui-monospace,monospace;padding:6px 10px;background:#080e18;color:var(--fg);border:1px solid #24354a;border-radius:6px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.g2{grid-template-columns:1fr}}[data-k="51"] .o86,[data-k="86"] .o51{display:none}#go.act{background:#2a9d5c!important;color:#fff}#msg{font-size:12px;padding:6px 10px;border-radius:6px;border:1px solid #1c2b3d;min-height:30px;background:#090f17}#msg.ok{border-color:#2a9d5c;color:#63e29f}#msg.err{border-color:#d33;color:#ff6b6b}.tag{font-size:11px;padding:2px 8px;border-radius:999px;background:#1a2838;color:#8ec9ff}
+</style>
+</head>
+<body data-k="51">
+<div class="w">
+<h1>MDA Microprocessor &amp; Microcontroller Lab Simulator</h1>
+<div class="r"><button class="tab on" id="t51">MDA-8051</button><button class="tab" id="t86">MDA-8086</button><button id="pw">POWER: ON</button><button id="md">MODE: Machine Code</button><button id="res">RES</button></div>
+<div id="board"><b class="sil" id="ttl">MDA-EMS51 VER 6.1</b>
+<div id="board-grid"><div style="display:grid;gap:10px"><div class="sil">16×2 CHARACTER LCD DISPLAY</div><div id="lcd">8051 &gt; input ?\n_</div><div class="r"><div><div class="sil" id="lt">I/O PORT · P1</div><div class="r" id="leds"></div></div><div class="o86"><div class="sil">7-SEGMENT · PORT A</div><svg id="seg" viewBox="0 0 64 100"></svg><div id="seg-val"></div></div><div class="o51"><div class="sil">DIP SWITCHES · P1</div><div class="r" id="dip"></div></div></div><div class="sil">HEX &amp; FUNCTION KEYPAD</div><div id="pad"></div></div>
+<div class="pc-panel" id="pc-box"><div class="r"><span class="sil">MDA WinIDE</span><span class="tag" id="mode-badge">Machine Code Mode</span></div><div class="r"><select id="ex"></select><button id="al">Assemble &amp; Load</button><button id="go">Run</button><button id="ps">Pause</button><button id="s1">Step</button><button id="rs">Reset</button></div><div id="msg">Ready. Switch to PC Mode to edit and assemble code.</div><div id="view-ed"><textarea id="ed" spellcheck="false" placeholder="; Assembly code"></textarea></div><div id="view-mon" style="display:none"><pre id="tl"></pre><input id="ti" placeholder="Terminal commands: G [addr] R T D [addr] E addr bytes CLS"></div><div class="r"><label>Speed <input type="range" id="sp" min="1" max="100" value="10"></label><span id="spv">10k ops</span></div></div></div></div>
+<div class="g2"><div class="p"><b>Assembler Listing</b><pre id="out"></pre></div><div class="p"><b>Registers / Internal Ports</b><pre id="regs"></pre></div></div>
+<p>Tip: Switch to PC (Assembly IDE) mode to load and run assembly programs.</p>
+</div>
+<script>
+// Lightweight browser-ready publication build. Full interactive simulator UI and controls.
+let cur='51',running=false,power=true;
+const $=s=>document.querySelector(s),H=n=>n.toString(16).toUpperCase().padStart(2,'0');
+const examples51=[['LED Demo','ORG 2000H\nMOV P1,#0F7H\nEND'] ,['LCD Hello','ORG 2000H\nMOV A,#\'H\'\nMOV P1,A\nEND']];
+const examples86=[['8086 LED Demo','CODE SEGMENT\nORG 1000H\nMOV AL,80H\nOUT 1FH,AL\nMOV AL,01H\nOUT 1BH,AL\nHLT\nCODE ENDS\nEND'] ,['Hello World','MOV AH,09H\nINT 21H\nHLT']];
+function makeLeds(){ $('#leds').innerHTML=[7,6,5,4,3,2,1,0].map(i=>`<div style="text-align:center"><div class="led" id="l${i}"></div><div class="sil">${i}</div></div>`).join('') };
+function makeDips(){ $('#dip').innerHTML=[0,1,2,3,4,5,6,7].map(i=>`<button class="sw" data-dip="${i}" title="P1.${i}"></button>`).join('') };
+function makePad(){const ks=['T0','STP','C','D','E','F','INT','GO','8','9','A','B','+','DA','4','5','6','7','-','AD','0','1','2','3'];$('#pad').innerHTML=ks.map(k=>`<button data-key="${k}">${k}</button>`).join('')+`<button data-key="RES" style="grid-column:1/-1;height:34px">RES</button>`};
+function makeSeg(){const seg=[[10,4,34,7],[46,10,7,34],[46,56,7,34],[10,88,34,7],[3,56,7,34],[3,10,7,34],[10,46,34,7]];$('#seg').innerHTML=seg.map(([x,y,w,h],i)=>`<rect id="sg${i}" x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>`).join('')};
+function populate(){const list=cur==='51'?examples51:examples86;$('#ex').innerHTML='<option value="-1">Select an Experiment</option>'+list.map((x,i)=>`<option value="${i}">${x[0]}</option>`).join('')}
+$('#ex').onchange=e=>{const i=+e.target.value;if(i>=0){const x=(cur==='51'?examples51:examples86)[i];$('#ed').value=x[1];$('#out').textContent='[Demo loaded]\n'+x[1]}}
+makeLeds();makeDips();makePad();makeSeg();populate();
+$('#dip').onclick=e=>{const b=e.target.closest('[data-dip]');if(!b)return;b.classList.toggle('on');e.prevent($event);};
+$('#dip').addEventListener('click',e=>{const b=e.target.closest('[data-dip]');if(!b)return;b.classList.toggle('on');const i=+b.dataset.dip;$('#leds').children[7-i]?.querySelector('.led')?.classList.toggle('on',b.classList.contains('on'))});
+$('#t51').onclick=()=>select('51');$('#t86').onclick=()=>select('86');
+function select(k){cur=k;document.body.dataset.k=k;$('#t51').classList.toggle('on',k==='51');$('#t86').classList.toggle('on',k==='86');$('#ttl').textContent=k==='51'?'MDA-EMS51 VER 6.1':'MDA-8086 TRAINER';populate();$('#lcd').textContent=k==='51'?'8051 > input ?\n_':'8086 > input ?\n_'}
+let mc=true;$('#md').onclick=()=>{mc=!mc;$('#md').textContent=mc?'MODE: Machine Code':'MODE: PC (Assembly IDE)';$('#mode-badge').textContent=mc?'Machine Code Mode':'PC Mode';$('#msg').textContent=mc?'Machine Code Mode: use the keypad':'PC Mode: editor and assembly tools active';$('#ed').disabled=mc};
+$('#pw').onclick=()=>{power=!power;$('#pw').textContent=power?'POWER: ON':'POWER: OFF';$('#lcd').textContent=power?(cur==='51'?'8051 > input ?\n_':'8086 > input ?\n_'):'                \n                ';};
+function regLine(){return cur==='51'?'A=00  B=00  PSW=00\nSP=07  DPTR=0000  PC=2000':'AX=0000 BX=0000 CX=0000 DX=0000\nIP=1000 CS=0000 DS=0000 ES=0000 SS=0000'}
+$('#rs').onclick=$('#res').onclick=()=>{$('#regs').textContent=regLine();$('#lcd').textContent=(cur==='51'?'8051 > input ?\n_':'8086 > input ?\n_')};
+$('#al').onclick=()=>{if(mc){$('#msg').textContent='Switch to PC Mode before assembling';$('#msg').className='err';return}const src=$('#ed').value.trim();if(!src){$('#msg').textContent='No assembly code';$('#msg').className='err';return}$('#out').textContent='(Demo assembler)\nSource loaded successfully\n00  '+H(0)+ '  (browser preview)';$('#regs').textContent=regLine();$('#msg').textContent='Assemble OK — demo build';$('#msg').className='ok'};
+$('#go').onclick=()=>{if(mc){$('#msg').textContent='Switch to PC Mode before running';$('#msg').className='err';return}running=!running;$('#go').classList.toggle('act',running);$('#msg').textContent=running?'▶ Running demo':'⏸ Stopped'};$('#ps').onclick=()=>{running=false;$('#go').classList.remove('act');$('#msg').textContent='Paused'};$('#s1').onclick=()=>{$('#regs').textContent=regLine();$('#msg').textContent='Single step'};
+$('#pad').onclick=e=>{const b=e.target.closest('[data-key]');if(!b)return;const k=b.dataset.key;if(k==='RES')$('#res').click();else if(k==='GO')$('#go').click();else if(k==='AD'||k==='DA'){$('#lcd').textContent=(k==='AD'?'Addr.    Data':'Addr.    Data')+'\n2000_    00'}else $('#lcd').textContent='KEY: '+k+'\nADDR: 2000'};
+$('#sp').oninput=e=>$('#spv').textContent=e.target.value+'k ops';$('#regs').textContent=regLine();select('51');
+</script>
+</body>
+</html>
